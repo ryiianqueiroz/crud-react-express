@@ -5,16 +5,18 @@ const app = express();
 
 const allowedOrigins = ['http://localhost:5173', 'https://crud-express-sigma.vercel.app'];
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, type, id-reply, gain, content');
-  next();
-});
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin not allowed by CORS'));
+    }
+  },
+  methods: 'GET,POST,PUT,DELETE,OPTIONS',
+  allowedHeaders: 'Content-Type, Authorization, type, id-reply, gain, content',
+  credentials: true
+}));
 
 app.use((err, req, res, next) => {
   if (err) {
@@ -23,17 +25,6 @@ app.use((err, req, res, next) => {
     next();
   }
 });
-
-
-app.options('*', (req, res) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
-  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, type, id-reply, gain, content');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  res.sendStatus(200);
-});
-
-
 
 const PORT = 5000;
 
@@ -115,6 +106,19 @@ app.get('/', (req, res) => {
   res.json(data.comments);
   console.log('Resposta enviada com sucesso');
 });
+
+// Rota GET para obter um comentário específico por ID
+app.get('/:id', (req, res) => {
+  const idComment = parseInt(req.params.id, 10);
+  const comment = data.comments.find(comment => comment.id === idComment);
+  
+  if (!comment) {
+    return res.status(404).json({ message: 'Comentário não encontrado' });
+  }
+
+  res.json(comment);
+});
+
 
 // Rota POST para adicionar um novo comentário
 app.post('/', (req, res) => {
