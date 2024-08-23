@@ -3,7 +3,7 @@ import cors from 'cors';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173', 'https://order-api-pi.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://crud-express-sigma.vercel.app'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
