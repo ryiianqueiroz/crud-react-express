@@ -4,18 +4,17 @@ import cors from 'cors';
 const app = express();
 
 const allowedOrigins = ['http://localhost:5173', 'https://crud-express-sigma.vercel.app'];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Origin not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos HTTP permitidos
-  allowedHeaders: ['Content-Type', 'Authorization', 'type', 'id-reply', 'gain', 'content'], // Cabeçalhos permitidos, incluindo os personalizados
-  credentials: true // Permitir envio de cookies e credenciais
-}));
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, type, id-reply, gain, content');
+  next();
+});
 
 app.options('*', cors({
   origin: function (origin, callback) {
