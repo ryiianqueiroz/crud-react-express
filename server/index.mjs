@@ -12,7 +12,16 @@ app.use(cors({
       callback(new Error('Origin not allowed by CORS'));
     }
   },
-  credentials: true // Se necessário, permitir envio de cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos HTTP permitidos
+  allowedHeaders: ['Content-Type', 'Authorization', 'type', 'id-reply', 'gain', 'content'], // Cabeçalhos permitidos, incluindo os personalizados
+  credentials: true // Permitir envio de cookies e credenciais
+}));
+
+app.options('*', cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'type', 'id-reply', 'gain', 'content'],
+  credentials: true
 }));
 
 const PORT = 5000;
