@@ -18,11 +18,18 @@ app.use(cors({
 }));
 
 app.options('*', cors({
-  origin: 'http://localhost:5173',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origin not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'type', 'id-reply', 'gain', 'content'],
   credentials: true
 }));
+
 
 const PORT = 5000;
 
