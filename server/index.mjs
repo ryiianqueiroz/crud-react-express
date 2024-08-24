@@ -3,7 +3,7 @@ import cors from 'cors';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173', 'https://crud-express-sigma.vercel.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://crud-express-sigma.vercel.app', 'http://localhost:5000'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -14,7 +14,7 @@ app.use(cors({
     }
   },
   methods: 'GET,POST,PUT,DELETE,OPTIONS',
-  allowedHeaders: 'Content-Type, Authorization, type, id-reply, gain, content',
+  allowedHeaders: 'Content-Type, Authorization, type, id-reply, gain, content, id-comment',
   credentials: true
 }));
 
@@ -107,18 +107,6 @@ app.get('/', (req, res) => {
   console.log('Resposta enviada com sucesso');
 });
 
-// Rota GET para obter um comentário específico por ID
-app.get('/:id', (req, res) => {
-  const idComment = parseInt(req.params.id, 10);
-  const comment = data.comments.find(comment => comment.id === idComment);
-  
-  if (!comment) {
-    return res.status(404).json({ message: 'Comentário não encontrado' });
-  }
-
-  res.json(comment);
-});
-
 
 // Rota POST para adicionar um novo comentário
 app.post('/', (req, res) => {
@@ -133,9 +121,9 @@ app.post('/', (req, res) => {
 });
 
 // Rota POST para adicionar uma resposta a um comentário
-app.post('/:id', (req, res) => {
-  console.log(`POST //${req.params.id} chamado:`, req.body);
-  const idComment = parseInt(req.params.id, 10);
+app.post('/', (req, res) => {
+  console.log(`POST //${parseInt(req.headers['id-comment'], 10)} chamado:`, req.body);
+  const idComment = parseInt(req.headers['id-comment'], 10);
 
   const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
 
@@ -154,8 +142,8 @@ app.post('/:id', (req, res) => {
 });
 
 // Rota DELETE para remover um comentário ou uma resposta
-app.delete('/:id', (req, res) => {
-  const idComment = parseInt(req.params.id, 10);
+app.delete('/', (req, res) => {
+  const idComment = parseInt(req.headers['id-comment'], 10);
   console.log(`DELETE //${idComment} chamado`);
 
   const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
@@ -185,8 +173,8 @@ app.delete('/:id', (req, res) => {
 });
 
 // Rota PUT para atualizar um comentário ou resposta
-app.put('/:id', (req, res) => {
-  const idComment = parseInt(req.params.id, 10);
+app.put('/', (req, res) => {
+  const idComment = parseInt(req.headers['id-comment'], 10);
   const content = req.headers['content'];
   const gain = req.headers['gain'];
   const idReply = parseInt(req.headers['id-reply'], 10);
