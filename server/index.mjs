@@ -132,7 +132,7 @@ app.post('/', (req, res) => {
 
     const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
-    newReply.idReply = uuidv4();;
+    newReply.idReply = uuidv4();
     replies.push(newReply);
 
     res.status(201).json(newReply);
