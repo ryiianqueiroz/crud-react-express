@@ -3,7 +3,7 @@ import cors from 'cors';
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173', 'https://crud-express-sigma.vercel.app', 'http://localhost:5000'];
+const allowedOrigins = ['http://localhost:5173',  'https://crud-react-express-eight.vercel.app/', 'https://crud-express-sigma.vercel.app', 'http://localhost:5000'];
 
 app.use(cors({
   origin: function (origin, callback) {
