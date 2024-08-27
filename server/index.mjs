@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
@@ -18,6 +17,15 @@ app.use(cors({
   allowedHeaders: 'Content-Type, Authorization, type, id-reply, gain, content, id-comment',
   credentials: true
 }));
+
+let uuidv4;
+
+import('uuid').then(module => {
+  uuidv4 = module.v4;
+}).catch(err => {
+  console.error("Erro ao importar 'uuid':", err);
+});
+
 
 app.use((err, req, res, next) => {
   if (err) {
@@ -121,7 +129,6 @@ app.post('/', (req, res) => {
     res.status(201).json(newComment);
     console.log('Novo comentário adicionado com sucesso');
   } else {
-    console.log(`POST //${parseInt(req.headers['id-comment'], 10)} chamado:`, req.body);
     const idComment = parseInt(req.headers['id-comment'], 10);
 
     const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
