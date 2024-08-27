@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 
@@ -107,38 +108,36 @@ app.get('/', (req, res) => {
   console.log('Resposta enviada com sucesso');
 });
 
-
 // Rota POST para adicionar um novo comentário
 app.post('/', (req, res) => {
   console.log('POST / chamado:', req.body);
-  
-  const newComment = req.body;
-  newComment.id = data.comments.length + 1;
-  data.comments.push(newComment);
-  
-  res.status(201).json(newComment);
-  console.log('Novo comentário adicionado com sucesso');
-});
+  console.log(req.headers['id-comment'])
 
-// Rota POST para adicionar uma resposta a um comentário
-app.post('/', (req, res) => {
-  console.log(`POST //${parseInt(req.headers['id-comment'], 10)} chamado:`, req.body);
-  const idComment = parseInt(req.headers['id-comment'], 10);
+  if ( isNaN(req.headers['id-comment']) ) {
+    const newComment = req.body;
+    newComment.id = data.comments.length + 1;
+    data.comments.push(newComment);
+    
+    res.status(201).json(newComment);
+    console.log('Novo comentário adicionado com sucesso');
+  } else {
+    console.log(`POST //${parseInt(req.headers['id-comment'], 10)} chamado:`, req.body);
+    const idComment = parseInt(req.headers['id-comment'], 10);
 
-  const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
+    const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
 
-  if (commentIndex === -1) {
-    return res.status(404).json({ message: 'Comentário não encontrado' });
+    if (commentIndex === -1) {
+      return res.status(404).json({ message: 'Comentário não encontrado' });
+    }
+
+    const replies = data.comments[commentIndex].replies || [];
+    const newReply = req.body;
+    newReply.idReply = uuidv4();;
+    replies.push(newReply);
+
+    res.status(201).json(newReply);
+    console.log('Resposta adicionada com sucesso');
   }
-
-  const replies = data.comments[commentIndex].replies || [];
-  const newReply = req.body;
-  newReply.idReply = replies.length + 1; // Atribuindo um ID à nova resposta
-  replies.push(newReply);
-  data.comments[commentIndex].replies = replies;
-
-  res.status(201).json(newReply);
-  console.log('Resposta adicionada com sucesso');
 });
 
 // Rota DELETE para remover um comentário ou uma resposta
@@ -155,7 +154,7 @@ app.delete('/', (req, res) => {
   if (req.headers.type === 'reply') {
     console.log('Deletando uma resposta');
     const replies = data.comments[commentIndex].replies || [];
-    const replyID = parseInt(req.headers['id-reply'], 10);
+    const replyID = req.headers['id-reply'];
     const replyIndex = replies.findIndex(reply => reply.idReply === replyID);
 
     if (replyIndex === -1) {
@@ -177,21 +176,25 @@ app.put('/', (req, res) => {
   const idComment = parseInt(req.headers['id-comment'], 10);
   const content = req.headers['content'];
   const gain = req.headers['gain'];
-  const idReply = parseInt(req.headers['id-reply'], 10);
+  const idReply = req.headers['id-reply'];
+  console.log(idComment)
+  console.log(idReply)
 
-  const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
+  let commentIndex = data.comments.findIndex(comment => comment.id === idComment);
 
   if (commentIndex === -1) {
     return res.status(404).json({ message: 'Comentário não encontrado' });
   }
 
-  if (idReply === -1) {
-    // Atualizar conteúdo ou escore do comentário
+  if (parseInt(idReply, 10) === -1) {
+    console.log(idReply)
+    
     const comment = data.comments[commentIndex];
     if (content) comment.content = content;
     if (gain) comment.score = gain;
+
   } else {
-    // Atualizar conteúdo ou escore de uma resposta
+    
     const replies = data.comments[commentIndex].replies || [];
     const replyIndex = replies.findIndex(reply => reply.idReply === idReply);
 
