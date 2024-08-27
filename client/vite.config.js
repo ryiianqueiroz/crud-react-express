@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': 'https://crud-express-sigma.vercel.app/'
+      '/api': 'https://crud-express-sigma.vercel.app'
     }
   },
   build: {

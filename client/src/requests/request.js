@@ -1,5 +1,5 @@
 export const fetchComments = async () => {
-  const response = await fetch("https://crud-express-sigma.vercel.app/");
+  const response = await fetch("https://crud-express-sigma.vercel.app");
   if (!response.ok) {
       throw new Error('Resposta do servidor não foi ok');
   }
