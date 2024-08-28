@@ -244,7 +244,7 @@ function CommentSection() {
                 <div className="flex justify-between items-center"> {/* AVATAR / DIAS POSTADOS / REPLY */}
                   <div className="flex text-center items-center sm:w-full sm:justify-between">
                     <div className="flex items-center">
-                      <img src={`../src/assets/images/avatars/image-${comment.user.username}.png`} className="w-6" alt="avatar" />
+                      <img src={`../assets/images/avatars/image-${comment.user.username}.png`} className="w-6" alt="avatar" />
                       <p className="ml-2 font-medium text-[0.9rem] text-[#0e1541] mob:text-[0.8rem]">{comment.user.username}</p>
 
                       { comment.user.username == "juliusomo" ? (
@@ -356,7 +356,7 @@ function CommentSection() {
                           <div className="flex justify-between items-center"> {/* AVATAR / DIAS POSTADOS / REPLY */}
                             <div className="flex text-center items-center sm:w-full sm:justify-between">
                               <div className="flex items-center">
-                                <img src={`../src/assets/images/avatars/image-${reply.user.username}.png`} className="w-6" alt="avatar" />
+                                <img src={`../assets/images/avatars/image-${reply.user.username}.png`} className="w-6" alt="avatar" />
                                 <p className="ml-2 font-medium text-[0.9rem] text-[#0e1541] mobsmall:text-[0.8rem] mobsmall:p-0 mobsmall:m-0 mobsmall:ml-2">{reply.user.username}</p>
                                 { reply.user.username == "juliusomo" ? (
                                   <p className="px-1 py-[2px] text-center mx-1 bg-[#5457b6] text-white text-[0.6rem] max-h-[20px]">you</p>
