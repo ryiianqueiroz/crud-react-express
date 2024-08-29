@@ -35,7 +35,7 @@ app.use((err, req, res, next) => {
   }
 });
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
@@ -116,31 +116,26 @@ app.get('/', (req, res) => {
   console.log('Resposta enviada com sucesso');
 });
 
-// Rota POST para adicionar um novo comentário
+// Rota POST para adicionar um novo comentário ou resposta
 app.post('/', (req, res) => {
   console.log('POST / chamado:', req.body);
-  console.log(req.headers['id-comment'])
+  const idComment = req.headers['id-comment'];
 
-  if ( isNaN(req.headers['id-comment']) ) {
+  if (isNaN(idComment)) {
     const newComment = req.body;
     newComment.id = data.comments.length + 1;
     data.comments.push(newComment);
-    
     res.status(201).json(newComment);
     console.log('Novo comentário adicionado com sucesso');
   } else {
-    const idComment = parseInt(req.headers['id-comment'], 10);
-
-    const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
-
+    const commentIndex = data.comments.findIndex(comment => comment.id === parseInt(idComment, 10));
     if (commentIndex === -1) {
       return res.status(404).json({ message: 'Comentário não encontrado' });
     }
 
-    const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
     newReply.idReply = uuidv4();
-    replies.push(newReply);
+    data.comments[commentIndex].replies.push(newReply);
 
     res.status(201).json(newReply);
     console.log('Resposta adicionada com sucesso');
@@ -150,6 +145,9 @@ app.post('/', (req, res) => {
 // Rota DELETE para remover um comentário ou uma resposta
 app.delete('/', (req, res) => {
   const idComment = parseInt(req.headers['id-comment'], 10);
+  const type = req.headers.type;
+  const idReply = req.headers['id-reply'];
+
   console.log(`DELETE //${idComment} chamado`);
 
   const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
@@ -158,11 +156,10 @@ app.delete('/', (req, res) => {
     return res.status(404).json({ message: 'Comentário não encontrado' });
   }
 
-  if (req.headers.type === 'reply') {
+  if (type === 'reply') {
     console.log('Deletando uma resposta');
     const replies = data.comments[commentIndex].replies || [];
-    const replyID = req.headers['id-reply'];
-    const replyIndex = replies.findIndex(reply => reply.idReply === replyID);
+    const replyIndex = replies.findIndex(reply => reply.idReply === idReply);
 
     if (replyIndex === -1) {
       return res.status(404).json({ message: 'Resposta não encontrada' });
@@ -184,8 +181,8 @@ app.put('/', (req, res) => {
   const content = req.headers['content'];
   const gain = req.headers['gain'];
   const idReply = req.headers['id-reply'];
-  console.log(idComment)
-  console.log(idReply)
+
+  console.log('PUT / chamado:', idComment, idReply);
 
   let commentIndex = data.comments.findIndex(comment => comment.id === idComment);
 
@@ -193,15 +190,12 @@ app.put('/', (req, res) => {
     return res.status(404).json({ message: 'Comentário não encontrado' });
   }
 
-  if (parseInt(idReply, 10) === -1) {
-    console.log(idReply)
-    
+  if (!idReply || idReply === "-1") {
     const comment = data.comments[commentIndex];
     if (content) comment.content = content;
-    if (gain) comment.score = gain;
-
+    if (gain) comment.score = parseInt(gain, 10);
+    res.status(200).json(comment);
   } else {
-    
     const replies = data.comments[commentIndex].replies || [];
     const replyIndex = replies.findIndex(reply => reply.idReply === idReply);
 
@@ -211,10 +205,11 @@ app.put('/', (req, res) => {
 
     const reply = replies[replyIndex];
     if (content) reply.content = content;
-    if (gain) reply.score = gain;
+    if (gain) reply.score = parseInt(gain, 10);
+    res.status(200).json(reply);
   }
 
-  res.status(200).json({ message: 'Atualização realizada com sucesso' });
+  console.log('Atualização realizada com sucesso');
 });
 
 // Inicia o servidor
