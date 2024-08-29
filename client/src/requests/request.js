@@ -17,7 +17,7 @@ export const postComment = async (idComment = NaN, content) => {
       credentials: 'include'
   });
   if (!response.ok) {
-      throw new Error('Resposta do servidor não foi ok');
+      throw new Error('Resposta do servidor não foi ok: ', response.error);
   }
   return response.json();
 };
