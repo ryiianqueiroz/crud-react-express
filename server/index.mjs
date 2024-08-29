@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-
 const app = express();
+
+let uuid = self.crypto.randomUUID();
 
 const allowedOrigins = ['http://localhost:5173',  'https://crud-react-express-eight.vercel.app', 'https://crud-express-sigma.vercel.app', 'http://localhost:5000'];
 
@@ -17,15 +18,6 @@ app.use(cors({
   allowedHeaders: 'Content-Type, Authorization, type, id-reply, gain, content, id-comment',
   credentials: true
 }));
-
-let uuidv4;
-
-import('uuid').then(module => {
-  uuidv4 = module.v4;
-}).catch(err => {
-  console.error("Erro ao importar 'uuid':", err);
-});
-
 
 app.use((err, req, res, next) => {
   if (err) {
@@ -118,7 +110,7 @@ app.get('/', (req, res) => {
 
 // Rota POST para adicionar um novo comentário
 app.post('/', (req, res) => {
-  console.log('POST / chamado:', req.body);
+  console.log(req.body);
   console.log(req.headers['id-comment'])
 
   if ( isNaN(req.headers['id-comment']) ) {
@@ -139,7 +131,7 @@ app.post('/', (req, res) => {
 
     const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
-    newReply.idReply = uuidv4();
+    newReply.idReply = uuid;
     replies.push(newReply);
 
     res.status(201).json(newReply);
