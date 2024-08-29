@@ -43,7 +43,7 @@ app.use(express.json());
 let data = {
   "currentUser": {
     "image": {
-      "png": "./images/avatars/image-juliusomo.png",
+      "png": "../assets/images/avatars/image-juliusomo.png",
       "webp": "./images/avatars/image-juliusomo.webp"
     },
     "username": "juliusomo"
