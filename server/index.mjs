@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 const app = express();
-
-let uuid = self.crypto.randomUUID();
+import crypto from "crypto"
+let uuid = crypto.randomUUID();
 
 const allowedOrigins = ['http://localhost:5173',  'https://crud-react-express-eight.vercel.app', 'https://crud-express-sigma.vercel.app', 'http://localhost:5000'];
 
