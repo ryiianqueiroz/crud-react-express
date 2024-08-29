@@ -105,6 +105,7 @@ function CommentSection() {
     }
 
     postComment( idComment, newComment )
+    console.log(idComment)
     setTextArea("")
     setReplyInterface(-1)
   }

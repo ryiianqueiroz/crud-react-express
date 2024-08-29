@@ -14,7 +14,7 @@ function PostSection() {
       score: 0,
       user: {
         image: { 
-          png: Avatar,
+          png: "./images/avatars/image-juliusomo.png",
           webp: "./images/avatars/image-juliusomo.webp"
         },
         username: "juliusomo"
