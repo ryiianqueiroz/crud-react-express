@@ -117,7 +117,7 @@ app.post('/', (req, res) => {
   let isNaNumber = isNaN(req.headers['id-comment'])
 
   if ( !isNaNumber ) { 
-    const commentIndex = data.comments.findIndex(comment => comment.id === idC);
+    const commentIndex = 1
 
     if (commentIndex === -1) {
       return res.status(404).json({ message: 'Comentário não encontrado' });
