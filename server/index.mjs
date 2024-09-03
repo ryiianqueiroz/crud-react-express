@@ -48,7 +48,7 @@ let data = {
       "score": 12,
       "user": {
         "image": {
-          "png": "../assets/images/avatars/image-amyrobson.png",
+          "png": "./images/avatars/image-amyrobson.png",
           "webp": "./images/avatars/image-amyrobson.webp"
         },
         "username": "amyrobson"
