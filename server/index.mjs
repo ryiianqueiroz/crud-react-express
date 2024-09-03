@@ -132,10 +132,9 @@ app.post('/', (req, res) => {
     const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
     newReply.idReply = uuid;
-    replies.push(newReply);
-
+    data.comments[commentIndex].replies.push(newReply);
     res.status(201).json(newReply);
-    console.log('Resposta adicionada com sucesso');
+    console.log(newReply);
   }
 });
 
