@@ -132,8 +132,9 @@ app.post('/', (req, res) => {
     const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
     newReply.idReply = uuid;
-    data.comments[commentIndex].replies.push(newReply);
-    res.status(201).json(newReply);
+    replies.push(newReply)
+    data.comments[commentIndex].replies = replies;
+    res.status(201).json({message: "Adicionado"});
     console.log(newReply);
   }
 });
