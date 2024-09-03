@@ -69,7 +69,7 @@ let data = {
       },
       "replies": [
         {
-          "idReply": "sdfsdfee-34kmfd",
+          "idReply": 1,
           "content": "If you're still new, I'd recommend focusing on the fundamentals of HTML, CSS, and JS before considering React. It's very tempting to jump ahead but lay a solid foundation first.",
           "createdAt": "1 week ago",
           "score": 4,
@@ -83,7 +83,7 @@ let data = {
           }
         },
         {
-          "idReply": "asdasd-98wer",
+          "idReply": 2,
           "content": "I couldn't agree more with this. Everything moves so fast and it always seems like everyone knows the newest library/framework. But the fundamentals are what stay constant.",
           "createdAt": "2 days ago",
           "score": 2,
@@ -102,14 +102,14 @@ let data = {
 };
 
 // Rota GET para obter os comentários
-app.get('/', async (req, res) => {
+app.get('/', (req, res) => {
   console.log('GET / chamado');
-  await res.json(data.comments);
+  res.json(data.comments);
   console.log('Resposta enviada com sucesso');
 });
 
 // Rota POST para adicionar um novo comentário
-app.post('/', async (req, res) => {
+app.post('/', (req, res) => {
   console.log(req.body);
   console.log(req.headers['id-comment'])
 
@@ -118,7 +118,7 @@ app.post('/', async (req, res) => {
     newComment.id = data.comments.length + 1;
     data.comments.push(newComment);
     
-    res.status(201).json(newComment);
+    res.status(200).json(newComment);
     console.log('Novo comentário adicionado com sucesso');
   } else {
     const idComment = parseInt(req.headers['id-comment'], 10);
@@ -131,10 +131,10 @@ app.post('/', async (req, res) => {
 
     const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
-    newReply.idReply = uuid;
-    await replies.push(newReply)
+    newReply.idReply = replies.length + 1;
+    replies.push(newReply)
     data.comments[commentIndex].replies = replies;
-    res.status(201).json({message: "Adicionado"});
+    res.status(200).json(newReply);
     console.log(newReply);
   }
 });
@@ -153,7 +153,7 @@ app.delete('/', (req, res) => {
   if (req.headers.type === 'reply') {
     console.log('Deletando uma resposta');
     const replies = data.comments[commentIndex].replies || [];
-    const replyID = req.headers['id-reply'];
+    const replyID = parseInt(req.headers['id-reply'], 10);
     const replyIndex = replies.findIndex(reply => reply.idReply === replyID);
 
     if (replyIndex === -1) {
@@ -175,7 +175,7 @@ app.put('/', (req, res) => {
   const idComment = parseInt(req.headers['id-comment'], 10);
   const content = req.headers['content'];
   const gain = req.headers['gain'];
-  const idReply = req.headers['id-reply'];
+  const idReply = parseInt(req.headers['id-reply'], 10);
   console.log(idComment)
   console.log(idReply)
 
