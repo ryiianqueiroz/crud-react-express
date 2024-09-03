@@ -96,7 +96,7 @@ function CommentSection() {
       score: 0,
       user: {
         image: { 
-          png: "./assets/images/avatars/image-juliusomo.png",
+          png: "./images/avatars/image-juliusomo.png",
           webp: "./images/avatars/image-juliusomo.webp"
         },
         username: "juliusomo"
