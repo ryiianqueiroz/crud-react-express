@@ -113,26 +113,18 @@ app.post('/', (req, res) => {
   console.log(req.body);
   console.log(req.headers['id-comment'])
 
-  if ( isNaN(req.headers['id-comment']) ) {
-    const idComment = 1;
+  let idC = parseInt(req.headers['id-comment'], 10)
+  let isNaNumber = isNaN(req.headers['id-comment'])
 
-    const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
-
-    if (commentIndex === -1) {
-      return res.status(404).json({ message: 'Comentário não encontrado' });
-    }
-
-    const replies = data.comments[commentIndex].replies || [];
-    const newReply = req.body;
-    newReply.idReply = uuid;
-    replies.push(newReply)
-    data.comments[commentIndex].replies = replies;
-    res.status(201).json(newReply);
-    console.log(newReply);
+  if ( isNaNumber ) { // SÓ NO IF O REPLY FUNCIONA
+    const newComment = req.body;
+    newComment.id = data.comments.length + 1;
+    data.comments.push(newComment);
+    
+    res.status(201).json(newComment);
+    console.log('Novo comentário adicionado com sucesso');
   } else {
-    const idComment = parseInt(req.headers['id-comment'], 10);
-
-    const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
+    const commentIndex = data.comments.findIndex(comment => comment.id === idC);
 
     if (commentIndex === -1) {
       return res.status(404).json({ message: 'Comentário não encontrado' });
