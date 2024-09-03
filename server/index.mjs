@@ -108,37 +108,37 @@ app.get('/', (req, res) => {
   console.log('Resposta enviada com sucesso');
 });
 
+// Rota POST para adicionar um novo comentário
 app.post('/', (req, res) => {
   console.log(req.body);
-  console.log(req.headers['id-comment']);
+  console.log(req.headers['id-comment'])
 
-  // Tentar converter 'id-comment' para um número
-  const idComment = parseInt(req.headers['id-comment'], 10);
+  let idC = parseInt(req.headers['id-comment'], 10)
+  let isNaNumber = isNaN(req.headers['id-comment'])
 
-  // Verificar se 'id-comment' é válido e encontrar o índice do comentário
-  const commentIndex = isNaN(idComment) ? -1 : data.comments.findIndex(comment => comment.id === idComment);
+  if ( !isNaNumber ) { 
+    const commentIndex = data.comments.findIndex(comment => comment.id === idC);
 
-  if (commentIndex === -1) {
-    // Se 'id-comment' for inválido ou não for encontrado, adicionar um novo comentário
+    if (commentIndex === -1) {
+      return res.status(404).json({ message: 'Comentário não encontrado' });
+    }
+
+    const replies = data.comments[commentIndex].replies || [];
+    const newReply = req.body;
+    newReply.idReply = uuid;
+    replies.push(newReply)
+    data.comments[commentIndex].replies = replies;
+    res.status(201).json(newReply);
+    console.log(newReply);
+  } else {
     const newComment = req.body;
     newComment.id = data.comments.length + 1;
     data.comments.push(newComment);
-
+    
     res.status(201).json(newComment);
     console.log('Novo comentário adicionado com sucesso');
-  } else {
-    // Adicionar uma resposta ao comentário existente
-    const replies = data.comments[commentIndex].replies || [];
-    const newReply = req.body;
-    newReply.idReply = uuidv4(); // Gerar um UUID para a resposta
-    replies.push(newReply);
-    data.comments[commentIndex].replies = replies;
-
-    res.status(201).json(newReply);
-    console.log('Resposta adicionada com sucesso:', newReply);
   }
 });
-
 
 // Rota DELETE para remover um comentário ou uma resposta
 app.delete('/', (req, res) => {
