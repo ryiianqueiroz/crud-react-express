@@ -102,14 +102,14 @@ let data = {
 };
 
 // Rota GET para obter os comentários
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   console.log('GET / chamado');
-  res.json(data.comments);
+  await res.json(data.comments);
   console.log('Resposta enviada com sucesso');
 });
 
 // Rota POST para adicionar um novo comentário
-app.post('/', (req, res) => {
+app.post('/', async (req, res) => {
   console.log(req.body);
   console.log(req.headers['id-comment'])
 
@@ -132,7 +132,7 @@ app.post('/', (req, res) => {
     const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
     newReply.idReply = uuid;
-    replies.push(newReply)
+    await replies.push(newReply)
     data.comments[commentIndex].replies = replies;
     res.status(201).json({message: "Adicionado"});
     console.log(newReply);
