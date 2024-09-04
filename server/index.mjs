@@ -136,7 +136,7 @@ app.post('/', (req, res) => {
       return res.status(404).json({ message: 'Comentário não encontrado' });
     }
 
-    const replies = data.comments[commentIndex - 1].replies || [];
+    const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
     newReply.idReply = uuid;
     replies.push(newReply)
