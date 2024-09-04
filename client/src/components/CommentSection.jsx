@@ -292,7 +292,7 @@ function CommentSection() {
             </div>
 
             { ( replyInterface === comment.id && isComment === 1 ) && (              
-              <form className="flex bg-white mt-4 pb-6 w-full rounded-lg">
+              <form onSubmit={replyingTo(comment.id, comment.user.username)} className="flex bg-white mt-4 pb-6 w-full rounded-lg">
                 <div className="bg-white w-full grid grid-cols-[auto,1fr,auto] gap-4">
                   <div className="m-5">
                     <img src={Avatar} alt="#" className="w-10"/>
@@ -308,7 +308,7 @@ function CommentSection() {
                   </div>
                   <div className="m-5 cursor-pointer" onClick={() => { replyInterface != -1 ? setReplyInterface(-1) : setUpdateInterface(-1) }}>
                   {(
-                    <button type="button" onClick={() => replyingTo(comment.id, comment.user.username)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
+                    <button type="submit" className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
                   )}
                   </div>
                 </div>
