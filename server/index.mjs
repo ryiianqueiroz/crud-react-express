@@ -111,28 +111,13 @@ app.get('/', (req, res) => {
 // Rota POST para adicionar um novo comentário
 app.post('/', (req, res) => {
   console.log(req.body);
-  console.log(req.headers['id-comment'])
+  console.log(req.headers['id-comment']);
+  
+  let isNaNumber = isNaN(req.headers['id-comment']);
 
-  let isNaNumber = isNaN(req.headers['id-comment'])
-
-  if ( !isNaNumber ) { 
-    let idC = 1
-
-    const commentIndex = data.comments.findIndex(comment => comment.id === idC);
-
-    if (commentIndex === -1) {
-      return res.status(404).json({ message: 'Comentário não encontrado' });
-    }
-
-    const replies = data.comments[commentIndex].replies || [];
-    const newReply = req.body;
-    newReply.idReply = uuid;
-    replies.push(newReply)
-    data.comments[commentIndex].replies = replies;
-    res.status(201).json(newReply);
-    console.log(newReply);
-  } else {
-    let idC = 1
+  // Se id-comment não for um número, trate como uma resposta a um comentário
+  if (!isNaNumber) { 
+    let idC = 1;
 
     const commentIndex = data.comments.findIndex(comment => comment.id === idC);
 
@@ -143,19 +128,25 @@ app.post('/', (req, res) => {
     const replies = data.comments[commentIndex].replies || [];
     const newReply = req.body;
     newReply.idReply = uuid;
-    replies.push(newReply)
+    replies.push(newReply);
     data.comments[commentIndex].replies = replies;
+
+    // Envia a resposta e termina a execução da função
     res.status(201).json(newReply);
     console.log(newReply);
-
-    // const newComment = req.body;
-    // newComment.id = data.comments.length + 1;
-    // data.comments.push(newComment);
-    
-    // res.status(201).json(newComment);
-    // console.log('Novo comentário adicionado com sucesso');
+    return; // A função termina aqui se for uma resposta
   }
+
+  // Se não for uma resposta, trata como um novo comentário
+  const newComment = req.body;
+  newComment.id = data.comments.length + 1;
+  data.comments.push(newComment);
+  
+  res.status(201).json(newComment);
+  console.log('Novo comentário adicionado com sucesso');
+
 });
+
 
 // Rota DELETE para remover um comentário ou uma resposta
 app.delete('/', (req, res) => {
