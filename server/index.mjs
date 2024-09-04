@@ -121,7 +121,7 @@ app.post('/', (req, res) => {
     res.status(201).json(newComment);
     console.log('Novo comentário adicionado com sucesso');
   } else {
-    const idComment = req.headers['id-comment']
+    const idComment = parseInt(req.headers['id-comment'], 10);
 
     const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
 

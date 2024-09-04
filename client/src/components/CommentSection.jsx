@@ -104,8 +104,11 @@ function CommentSection() {
       replyingTo: replyUser,
     }
 
-    postComment( idComment, newComment )
-    console.log(idComment)
+    try {
+      await postComment( idComment, newComment);
+    } catch (error) {
+      console.error('Failed to post comment:', error);
+    }
     setTextArea("")
     setReplyInterface(-1)
   }
