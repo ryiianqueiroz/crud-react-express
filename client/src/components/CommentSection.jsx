@@ -89,7 +89,9 @@ function CommentSection() {
     }
   }
 
-  const replyingTo = async ( idComment, replyUser ) => {
+  const replyingTo = async ( idComment, replyUser, e ) => {
+    e.preventDefault();
+
     const newComment = {
       content: textAreaValue,
       createdAt: "a few moments ago",
