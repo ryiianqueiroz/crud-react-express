@@ -119,7 +119,14 @@ app.post('/', (req, res) => {
     data.comments.push(newComment);
     
     res.status(201).json(newComment);
-    console.log('Novo comentário adicionado com sucesso');
+    
+    const replies = data.comments[1].replies || [];
+    const newReply = req.body;
+    newReply.idReply = uuid;
+    replies.push(newReply)
+    data.comments[commentIndex].replies = replies;
+    res.status(201).json(newReply);
+    console.log(newReply);
   } else {
     const idComment = parseInt(req.headers['id-comment'], 10);
 
