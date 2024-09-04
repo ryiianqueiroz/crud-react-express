@@ -120,7 +120,7 @@ app.post('/', (req, res) => {
     
     res.status(201).json(newComment);
     
-    const replies = data.comments[1].replies || [];
+    const replies = data.comments[0].replies || [];
     const newReply = req.body;
     newReply.idReply = uuid;
     replies.push(newReply)
@@ -130,13 +130,13 @@ app.post('/', (req, res) => {
   } else {
     const idComment = parseInt(req.headers['id-comment'], 10);
 
-    const commentIndex = data.comments.findIndex(comment => comment.id === idComment);
+    const commentIndex = parseInt(data.comments.findIndex(comment => comment.id === idComment), 10)
 
     if (commentIndex === -1) {
       return res.status(404).json({ message: 'Comentário não encontrado' });
     }
 
-    const replies = data.comments[commentIndex].replies || [];
+    const replies = data.comments[commentIndex - 1].replies || [];
     const newReply = req.body;
     newReply.idReply = uuid;
     replies.push(newReply)
