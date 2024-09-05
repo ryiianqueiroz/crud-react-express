@@ -89,8 +89,9 @@ function CommentSection() {
     }
   }
 
-  const replyingTo = async ( idComment, replyUser ) => {
-
+  const replyingTo = async (idComment, replyUser, e) => {
+    e.preventDefault()
+    
     const newComment = {
       content: textAreaValue,
       createdAt: "a few moments ago",
@@ -103,16 +104,17 @@ function CommentSection() {
         username: "juliusomo"
       },
       replyingTo: replyUser,
-    }
-
+    };
+  
     try {
-      await postComment( idComment, newComment);
+      await postComment(idComment, newComment);
     } catch (error) {
       console.error('Failed to post comment:', error);
     }
-    setTextArea("")
-    setReplyInterface(-1)
-  }
+    setTextArea("");
+    setReplyInterface(-1);
+  };
+  
 
   const handleChangeReplying = (e) => {
     setTextArea(e.target.value);
@@ -291,11 +293,11 @@ function CommentSection() {
               </div>
             </div>
 
-            { ( replyInterface === comment.id && isComment === 1 ) && (              
-              <form onSubmit={replyingTo(comment.id, comment.user.username)} className="flex bg-white mt-4 pb-6 w-full rounded-lg">
+            { replyInterface === comment.id && isComment === 1 ? 
+              <form onSubmit={e => {replyingTo(comment.id, comment.user.username, e)}} className="flex bg-white mt-4 pb-6 w-full rounded-lg">
                 <div className="bg-white w-full grid grid-cols-[auto,1fr,auto] gap-4">
                   <div className="m-5">
-                    <img src={Avatar} alt="#" className="w-10"/>
+                    <img src={Avatar} alt="User avatar" className="w-10"/>
                   </div>
                   <div className="flex justify-center max-h-[130px] mt-5">
                     <textarea
@@ -303,17 +305,18 @@ function CommentSection() {
                       placeholder="Add a comment..."
                       id="text-area"
                       value={textAreaValue}
-                      onChange={handleChangeReplying}> 
+                      onChange={handleChangeReplying}>
                     </textarea>
                   </div>
-                  <div className="m-5 cursor-pointer" onClick={() => { replyInterface != -1 ? setReplyInterface(-1) : setUpdateInterface(-1) }}>
-                  {(
+                  <div className="m-5">
                     <button type="submit" className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
-                  )}
                   </div>
                 </div>
               </form>
-            )}
+            : <></> }
+
+            
+
 
             {( updateInterface === comment.id && isComment === 1 ) && (              
               <form className="flex bg-white mt-4 pb-6 w-full rounded-lg">
@@ -447,9 +450,9 @@ function CommentSection() {
                             </div>
                             <div className="m-5 cursor-pointer" onClick={() => (setReplyInterface(-1), setUpdateInterface(-1))}>
                               { replyInterface != -1 ? (
-                                <button type="submit" onClick={() => replyingTo(comment.id, reply.user.username)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
+                                <button type="button" onClick={() => replyingTo(comment.id, reply.user.username)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
                               ) : (
-                                <button type="submit" onClick={() => editContent(comment.id, reply.idReply, textAreaValue)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
+                                <button type="button" onClick={() => editContent(comment.id, reply.idReply, textAreaValue)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
                               )}
                             </div>
                           </div>
