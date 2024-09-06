@@ -1,5 +1,5 @@
 export const fetchComments = async () => {
-  const response = await fetch("https://crud-express-sigma.vercel.app");
+  const response = await fetch("http://localhost:5000");
   if (!response.ok) {
       throw new Error('Resposta do servidor não foi ok');
   }
@@ -7,7 +7,7 @@ export const fetchComments = async () => {
   };
 
 export const postComment = async (idComment = NaN, content) => {
-  const response = await fetch("https://crud-express-sigma.vercel.app", {
+  const response = await fetch("http://localhost:5000", {
       method: 'POST',
       headers: {
       'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ export const postComment = async (idComment = NaN, content) => {
 
 export const deletarComentario = async (id, type, idReply) => {
 try {
-  const response = await fetch("https://crud-express-sigma.vercel.app", {
+  const response = await fetch("http://localhost:5000", {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ try {
 
 export const score = async ( idComment, gain, idReply = -1 ) => {
 try {
-  const response = await fetch("https://crud-express-sigma.vercel.app", {
+  const response = await fetch("http://localhost:5000", {
     method: "PUT",
     headers: {
       'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ try {
 
 export const updateContent = async ( idComment, idReply = -1, contentUpdated ) => {
 try {
-  const response = await fetch("https://crud-express-sigma.vercel.app", {
+  const response = await fetch("http://localhost:5000", {
     method: "PUT",
     headers: {
       'Content-Type': 'application/json',

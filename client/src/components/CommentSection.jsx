@@ -210,7 +210,7 @@ function CommentSection() {
 
   return (
   <>
-    <div className="flex flex-col p-[50px] pb-[25%] md:p-[30px] md:pb-[170px] mob:mb-[180px] mobsmall:p-[15px]">
+    <div className="flex flex-col p-[50px] pb-[25%] md:p-[30px] md:pb-[170px] mob:mb-[10%] mobsmall:p-[15px] mobsmall:mb-[70%]">
       {comments.map((comment) => {
         return (
           <div className="mt-4 rounded-sm" key={comment.id} id={comment.id}> {/* FUNCTION COMENTÁRIO */}
@@ -314,8 +314,6 @@ function CommentSection() {
                 </div>
               </form>
             : <></> }
-
-            
 
 
             {( updateInterface === comment.id && isComment === 1 ) && (              
@@ -433,7 +431,30 @@ function CommentSection() {
                         </div>
                       </div>
 
-                      { ( ( replyInterface === reply.idReply && isReply === 1 ) || ( updateInterface === reply.idReply && isReply === 1 ) ) && (
+                      {replyInterface === reply.idReply && isReply === 1 ?
+                        <form onSubmit={e => {replyingTo(comment.id, reply.user.username, e)}} className="flex bg-white mt-4 pb-6 max-w-[500px] ml-[100px] rounded-lg">
+                          <div className="bg-white w-full grid grid-cols-[auto,1fr,auto] gap-4">
+                            <div className="m-5">
+                              <img src={Avatar} alt="#" className="w-10"/>
+                            </div>
+                            <div className="flex justify-center max-h-[130px] mt-5">
+                              <textarea
+                                className="peer max-h-[100px] w-full resize-none border-[2px] rounded-[7px] bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-gray-900 focus:border-t-transparent focus:outline-0 disabled:resize-none disabled:border-0 disabled:bg-blue-gray-50"
+                                placeholder="Add a comment..."
+                                id="text-area"
+                                value={textAreaValue}
+                                onChange={handleChangeReplying}> 
+                              </textarea>
+                            </div>
+                            <div className="m-5 cursor-pointer">
+                              <button type="submit" className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
+                            </div>
+                          </div>
+                        </form>
+                       : <></>
+                      }
+
+                      { ( updateInterface === reply.idReply && isReply === 1 ) && (
                         <form className="flex bg-white mt-4 pb-6 max-w-[500px] ml-[100px] rounded-lg">
                           <div className="bg-white w-full grid grid-cols-[auto,1fr,auto] gap-4">
                             <div className="m-5">
@@ -449,11 +470,7 @@ function CommentSection() {
                               </textarea>
                             </div>
                             <div className="m-5 cursor-pointer" onClick={() => (setReplyInterface(-1), setUpdateInterface(-1))}>
-                              { replyInterface != -1 ? (
-                                <button type="button" onClick={() => replyingTo(comment.id, reply.user.username)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
-                              ) : (
-                                <button type="button" onClick={() => editContent(comment.id, reply.idReply, textAreaValue)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>
-                              )}
+                              <button type="button" onClick={() => editContent(comment.id, reply.idReply, textAreaValue)} className="p-3 px-5 bg-[#5457b6] text-white rounded-lg text-[0.9rem]">SEND</button>                            
                             </div>
                           </div>
                         </form>
